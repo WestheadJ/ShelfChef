@@ -12,10 +12,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.shelfchefapp",
       "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to scan recipe ingredients.",
-        "NSPhotoLibraryAddUsageDescription": "This app saves scanned images to your photo library.",
-        "NSMicrophoneUsageDescription": "This app may access the microphone for camera functionality.",
-        "NSPhotoLibraryUsageDescription": "This app accesses your photo library to display scanned images."
+        "NSCameraUsageDescription": "This app uses the camera to scan recipe ingredients."
       }
     },
     "android": {
