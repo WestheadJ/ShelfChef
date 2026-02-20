@@ -1,3 +1,4 @@
+import React, { useRef, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,7 +8,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useEffect, useRef, useState } from "react";
 import TextRecognition from "@react-native-ml-kit/text-recognition";
 
 export default function Index() {
@@ -16,7 +16,9 @@ export default function Index() {
   const [permission, requestPermission] = useCameraPermissions();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [ocrText, setOcrText] = useState<string>("");
+  const [recipeData, setRecipeData] = useState<any>(null);
   const [processing, setProcessing] = useState(false);
+
 
   useEffect(() => {
     requestPermission();
@@ -28,31 +30,43 @@ export default function Index() {
     try {
       setProcessing(true);
 
-      // 1️⃣ Capture photo (this already creates a temp file)
-      const photo = await cameraRef.current.takePictureAsync({
-        quality: 1,
-      });
-
-      // This URI is valid and readable by ML Kit
+      // 1️⃣ Capture photo
+      const photo = await cameraRef.current.takePictureAsync({ quality: 1 });
       setPhotoUri(photo.uri);
 
-      // 2️⃣ Run on-device OCR directly on the temp file
+      // 2️⃣ Run on-device OCR
       const result = await TextRecognition.recognize(photo.uri);
+      const ocr = result.text || "";
+      setOcrText(ocr);
 
-      console.log("OCR FULL RESULT:", result);
-      console.log("OCR TEXT:", result.text);
+      const response = await fetch("http://192.168.1.64:4001/parse-recipe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ocrText: ocr }), // Send raw OCR text to server for parsing
+      });
 
-      setOcrText(result.text || "No text detected");
+      const recipe = await response.json();
+      console.log("Parsed recipe from server:", recipe.name?.value || "No title");
+      setRecipeData(recipe);
+
+      // // 3️⃣ Parse structured recipe data
+      // setRecipeData(parsed);
+
+      // console.log("OCR FULL RESULT:", result);
+      // console.log("OCR TEXT:", ocr);
+      // console.log("Parsed recipe:", parsed);
     } catch (error) {
       console.error("OCR failed:", error);
       setOcrText("OCR failed");
+      setRecipeData(null);
     } finally {
       setProcessing(false);
     }
   };
 
   // ---- Permission states ----
-
   if (!permission) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -73,7 +87,6 @@ export default function Index() {
   }
 
   // ---- Main UI ----
-
   return (
     <View style={{ flex: 1 }}>
       {!photoUri ? (
@@ -113,27 +126,30 @@ export default function Index() {
         </>
       ) : (
         <ScrollView style={{ padding: 20 }}>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-            Captured Image
-          </Text>
-
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Captured Image</Text>
           <Image
             source={{ uri: photoUri }}
             style={{ width: "100%", height: 400, marginVertical: 15 }}
           />
 
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-            OCR Output
-          </Text>
 
-          <Text selectable style={{ marginTop: 10 }}>
-            {ocrText}
-          </Text>
+
+          {recipeData && (
+            <>
+              <Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 20 }}>Title: {recipeData?.name?.value || "No title available"}</Text>
+              {recipeData.ingredients.map((ingredient: any, i: number) => (
+                <Text key={i} style={{ fontSize: 16, marginTop: 10 }}>
+                  {ingredient.quantity.value} {ingredient.unit.value} {ingredient.name.value}
+                </Text>
+              ))}
+            </>
+          )}
 
           <TouchableOpacity
             onPress={() => {
               setPhotoUri(null);
               setOcrText("");
+              setRecipeData(null);
             }}
             style={{
               marginTop: 30,
