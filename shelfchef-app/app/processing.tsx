@@ -8,8 +8,10 @@ import { parseRecipeOCR, } from "@/services/api";
 
 
 export default function Processing() {
-    const { photoUri } = useLocalSearchParams();
+    let { photoUri } = useLocalSearchParams();
     const [processing, setProcessing] = useState(0);
+
+
 
     useEffect(() => {
         async function run() {

@@ -7,7 +7,7 @@ export function RecipeProvider({ children }: { children: React.ReactNode }) {
 
     async function loadRecipes() {
         // Replace with AsyncStorage / API later
-        const stored = [];
+        const stored: any = [];
         setRecipes(stored);
         return stored;
     }

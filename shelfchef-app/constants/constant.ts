@@ -1,1 +1,1 @@
-export const IP = { address: "172.20.10.2", port: "4001" }
+export const IP = { address: "192.168.1.202", port: "4001" }

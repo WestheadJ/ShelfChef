@@ -94,6 +94,7 @@ export default function Capture() {
                 facing="back"
                 autofocus="on"
                 active={true}
+                selectedLens="builtInUltraWideCamera"
             />
 
             {!processing && <TouchableOpacity
