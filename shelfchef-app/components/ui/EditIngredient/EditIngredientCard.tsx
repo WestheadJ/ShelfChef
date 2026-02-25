@@ -1,5 +1,6 @@
 import { Text, TextInput, View } from "react-native";
-type IngredientField = "name" | "quantity" | "unit" | "extraDetail";
+import { IngredientField } from "@/types/recipe";
+
 type Props = {
     ingredient: any;
     index: number;
@@ -24,7 +25,7 @@ export function EditIngredientCard({
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 8 }}>
             <Text>{label}</Text>
             <TextInput
-                value={ingredient[field]?.value ?? ""}
+                value={String(ingredient[field]?.value ?? "")}
                 onChangeText={(text) => updateIngredient(index, field, text)}
                 style={style}
                 keyboardType={keyboardType}

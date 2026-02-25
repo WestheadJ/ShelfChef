@@ -10,6 +10,9 @@ export interface Ingredient {
     extraDetail: ConfidenceField<string>;
 }
 
+export type IngredientField = "name" | "quantity" | "unit" | "extraDetail";
+
+
 export interface RecipeAIResponse {
     name: ConfidenceField<string>;
     pageNumber: ConfidenceField<number>;

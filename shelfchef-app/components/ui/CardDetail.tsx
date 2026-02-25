@@ -1,6 +1,5 @@
 import { Text } from "react-native";
-
-type IngredientField = "name" | "quantity" | "unit" | "extraDetail";
+import { IngredientField } from "@/types/recipe";
 
 type Props = {
     ingredient: any;
