@@ -1,27 +1,15 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { EditIngredientCard } from "@/components/ui/EditIngredient/EditIngredientCard";
 import { CardDetail } from "@/components/ui/CardDetail";
+import { IngredientField, State, Action } from "@/types/recipe";
 
-type IngredientField = "name" | "quantity" | "unit" | "extraDetail";
 
-type State = {
-    recipeData: any;
-    editingIndex: number | null;
-    save: boolean;
-};
-
-type Action =
-    | { type: "SET_EDITING"; index: number | null }
-    | { type: "SET_RECIPE"; payload: any }
-    | { type: "UPDATE_FIELD"; index: number; field: IngredientField; value: any }
-    | { type: "ADD_EXTRA_DETAIL"; index: number }
-    | { type: "SET_SAVE"; value: boolean }
-    | { type: "RESET_ALL" };
 
 function reducer(state: State, action: Action): State {
+
     switch (action.type) {
         case "SET_EDITING":
             return {
@@ -90,6 +78,8 @@ function reducer(state: State, action: Action): State {
 
         default:
             return state;
+
+
     }
 }
 
@@ -116,16 +106,23 @@ export default function Preview() {
     return (
         <View>
             <ScrollView style={{ padding: 20, marginBottom: 10 }}>
-                <Text
-                    style={{
-                        fontSize: 22,
-                        fontWeight: "bold",
-                        marginTop: 20,
-                        textAlign: "center"
-                    }}
-                >
-                    {state.recipeData.name?.value ?? "Untitled Recipe"}
-                </Text>
+                <TouchableOpacity style={{ alignItems: "center", flexDirection: "row", justifyContent: "center", maxWidth: "100%" }}>
+
+
+                    <Text
+                        style={{
+                            fontSize: 20,
+                            fontWeight: "bold",
+                            marginTop: 20,
+                            textAlign: "center"
+                        }}
+                    >
+                        {state.recipeData.name?.value ?? "Untitled Recipe"}
+                    </Text>
+                    <Ionicons name="pencil" size={13} color="gray" style={{ backgroundColor: "lightgray", borderRadius: 100, padding: 4 }} />
+
+                </TouchableOpacity>
+
 
                 {state.recipeData.ingredients?.map((ing: any, i: number) => {
                     const isEditing = i === state.editingIndex;
@@ -257,21 +254,25 @@ export default function Preview() {
                                     )}
                                 </View>
                             ) : (
-                                <View style={{ gap: 6, alignItems: "flex-start" }}>
-                                    {ing.quantity?.value && (
-                                        <CardDetail ingredient={ing} field="quantity" />
-                                    )}
-                                    {ing.unit?.value && (
-                                        <CardDetail ingredient={ing} field="unit" />
-                                    )}
-                                    {ing.name?.value && (
-                                        <CardDetail ingredient={ing} field="name" />
-                                    )}
-                                    {ing.extraDetail?.value && (
-                                        <CardDetail ingredient={ing} field="extraDetail" />
-                                    )}
+                                <View>
+                                    <View style={{ gap: 6, alignItems: "flex-start" }}>
+                                        {ing.quantity?.value && (
+                                            <CardDetail ingredient={ing} field="quantity" />
+                                        )}
+                                        {ing.unit?.value && (
+                                            <CardDetail ingredient={ing} field="unit" />
+                                        )}
+                                        {ing.name?.value && (
+                                            <CardDetail ingredient={ing} field="name" />
+                                        )}
+                                        {ing.extraDetail?.value && (
+                                            <CardDetail ingredient={ing} field="extraDetail" />
+                                        )}
+                                    </View>
+                                    <Ionicons name="pencil" size={13} color="gray" style={{ position: "absolute", right: 4, top: 4, backgroundColor: "lightgray", borderRadius: 100, padding: 4 }} />
                                 </View>
                             )}
+
                         </Wrapper>
                     );
                 })}

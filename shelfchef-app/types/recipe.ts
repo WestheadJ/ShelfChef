@@ -30,3 +30,17 @@ export interface RecipeDraft {
     data?: RecipeAIResponse;
     photoUri?: string;
 }
+
+export type State = {
+    recipeData: any;
+    editingIndex: number | null;
+    save: boolean;
+};
+
+export type Action =
+    | { type: "SET_EDITING"; index: number | null }
+    | { type: "SET_RECIPE"; payload: any }
+    | { type: "UPDATE_FIELD"; index: number; field: IngredientField; value: any }
+    | { type: "ADD_EXTRA_DETAIL"; index: number }
+    | { type: "SET_SAVE"; value: boolean }
+    | { type: "RESET_ALL" };
