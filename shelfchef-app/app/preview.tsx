@@ -1,7 +1,10 @@
-import { View, Text, Image, ScrollView, TouchableOpacity, TextInput } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
+import { EditIngredientCard } from "@/components/ui/EditIngredient/EditIngredientCard";
+import { CardDetail } from "@/components/ui/CardDetail"
+import { router } from "expo-router";
 
 
 export default function Preview() {
@@ -11,6 +14,29 @@ export default function Preview() {
     const [save, setSave] = useState(false);
 
     if (!recipeData) return null;
+
+    const updateIngredient = (
+        index: number,
+        field: "name" | "quantity" | "unit" | "extraDetail",
+        value: any
+    ) => {
+        const updatedIngredients = [...recipeData.ingredients];
+
+        updatedIngredients[index] = {
+            ...updatedIngredients[index],
+            [field]: {
+                ...updatedIngredients[index][field],
+                value, confidence: 0
+            }
+        };
+
+        setRecipeData({
+            ...recipeData,
+            ingredients: updatedIngredients
+        });
+
+        setSave(true);
+    };
 
     return (
         <View>
@@ -34,6 +60,8 @@ export default function Preview() {
                                 borderColor: isEditing ? "blue" : "#eee",
                                 padding: 12,
                                 borderRadius: 8
+                                , flexDirection: "column",
+                                width: "100%"
                             }}
                             {...(!isEditing && {
                                 onPress: () => { setEditingIndex(i); setSave(false); }
@@ -42,64 +70,15 @@ export default function Preview() {
                             {isEditing ? (
                                 <View>
                                     {/* Editing Viewport */}
-                                    <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-                                        <Text>Quantity:</Text>
-                                        <TextInput
-                                            keyboardType="numeric"
-                                            value={String(ing.quantity?.value ?? "")}
-                                            onChangeText={(text) => {
-                                                const updatedIngredients = [...recipeData.ingredients];
-                                                updatedIngredients[i].quantity.value = text;
-                                                setRecipeData({ ...recipeData, ingredients: updatedIngredients });
-                                                setSave(true);
-                                            }}
-                                            style={{ width: 50, borderBottomWidth: 1, borderColor: "#ccc", padding: 4 }}
-                                        />
-                                    </View>
-                                    <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 8 }}>
-                                        <Text>Unit:</Text>
-                                        <TextInput
-                                            value={ing.unit.value}
-                                            onChangeText={(text) => {
-                                                const updatedIngredients = [...recipeData.ingredients];
-                                                updatedIngredients[i].unit.value = text;
-                                                setRecipeData({ ...recipeData, ingredients: updatedIngredients });
-                                                setSave(true);
-                                                console.log("Updated unit:", text);
-
-                                            }}
-                                            style={{ width: 60, borderBottomWidth: 1, borderColor: "#ccc", padding: 4 }}
-                                        />
-                                    </View>
-                                    <TextInput
-                                        value={ing.name.value}
-                                        onChangeText={(text) => {
-                                            const updatedIngredients = [...recipeData.ingredients];
-                                            updatedIngredients[i].name.value = text;
-                                            setRecipeData({ ...recipeData, ingredients: updatedIngredients });
-                                            setSave(true);
-
-                                        }}
-                                    />
+                                    <EditIngredientCard ingredient={ing} index={i} label={"Quantity:"} field={"quantity"} updateIngredient={updateIngredient} style={{ width: 50, borderBottomWidth: 1, borderColor: "#ccc", padding: 4 }} keyboardType="numeric" />
+                                    <EditIngredientCard ingredient={ing} index={i} label={"Unit:"} field={"unit"} updateIngredient={updateIngredient} style={{ width: 90, borderBottomWidth: 1, borderColor: "#ccc", padding: 4 }} />
+                                    <EditIngredientCard ingredient={ing} index={i} label={"Name:"} field={"name"} updateIngredient={updateIngredient} style={{ flex: 1, borderBottomWidth: 1, borderColor: "#ccc", padding: 4 }} />
                                     {ing.extraDetail.value ? (
-                                        <View style={{ marginTop: 8 }}>
-                                            <Text > Extra Detail:</Text>
-                                            <TextInput
-                                                value={ing.extraDetail.value}
-                                                onChangeText={(text) => {
-                                                    const updatedIngredients = [...recipeData.ingredients];
-                                                    updatedIngredients[i].extraDetail.value = text;
-                                                    setRecipeData({ ...recipeData, ingredients: updatedIngredients });
-                                                    setSave(true);
-
-                                                }}
-                                                style={{ borderBottomWidth: 1, borderColor: "#ccc", padding: 4 }}
-                                            />
-                                        </View>
+                                        <EditIngredientCard ingredient={ing} index={i} label={"Extra Detail:"} field={"extraDetail"} updateIngredient={updateIngredient} style={{ flex: 1, borderBottomWidth: 1, borderColor: "#ccc", padding: 4 }} />
 
                                     ) : (<TouchableOpacity style={{ marginTop: 8 }} onPress={() => {
                                         const updatedIngredients = [...recipeData.ingredients];
-                                        updatedIngredients[i].extraDetail.value = "Add extra detail here";
+                                        updatedIngredients[i].extraDetail.value = "";
                                         setRecipeData({ ...recipeData, ingredients: updatedIngredients });
                                         setSave(true);
                                     }}>
@@ -115,20 +94,33 @@ export default function Preview() {
                                         }} style={{ backgroundColor: "lightblue", padding: 8, borderRadius: 4 }}><Text>Add Ingredient</Text></TouchableOpacity>}
 
 
-                                </View>) : (<View>
-                                    <Text>
-                                        {ing.quantity.value} {ing.unit.value} {ing.name.value}
-                                    </Text>
+                                </View>) : (<View
+                                    style={{
+                                        gap: 6,
+                                        alignItems: "flex-start"
+                                    }}
+                                >
+                                    {ing.quantity?.value && (
+                                        <CardDetail ingredient={ing} field="quantity" />
+                                    )}
 
-                                    {ing.extraDetail.value ? (
-                                        <><Text style={{ fontSize: 12, opacity: 0.6 }}>Extra Detail:</Text>
-                                            <Text style={{ fontSize: 12, opacity: 0.6 }}>{ing.extraDetail.value}</Text>
-                                        </>
-                                    ) : null}
-                                    {!save && <Ionicons name="pencil" size={12} style={{ position: "absolute", right: 4, top: 4, padding: 6, backgroundColor: "lightgray", borderRadius: 100 }} color="black" />}
+                                    {ing.unit?.value && (
+                                        <CardDetail ingredient={ing} field="unit" />
+                                    )}
+
+                                    {ing.name?.value && (
+
+                                        <CardDetail ingredient={ing} field="name" />
+
+                                    )}
+
+                                    {ing.extraDetail?.value && (
+                                        <CardDetail ingredient={ing} field="extraDetail" />
+                                    )
+                                    }
                                 </View>)
                             }
-                        </Wrapper>
+                        </Wrapper >
                     );
                 })}
                 <TouchableOpacity style={{ marginTop: 20, alignSelf: "center", backgroundColor: "black", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8, marginBottom: 110 }} >
@@ -136,12 +128,14 @@ export default function Preview() {
                 </TouchableOpacity>
 
             </ScrollView >
-            <View style={{ position: "absolute", bottom: 20, left: 0, right: 0, flexDirection: "row", justifyContent: "center", gap: 20, paddingBottom: 20 }}>
-                <TouchableOpacity style={{ backgroundColor: "black", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8 }} >
+            <View style={{ position: "absolute", bottom: 2, left: 0, right: 0, flexDirection: "row", justifyContent: "center", gap: 20, paddingBottom: 20 }}>
+                <TouchableOpacity style={{ backgroundColor: "red", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8, opacity: 0.9 }} onPress={() => { setEditingIndex(null); setSave(false); setRecipeData(null); router.push("/capture") }} >
                     <Text style={{ color: "white" }}>Cancel</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ backgroundColor: "black", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8 }} >
+
+
+                <TouchableOpacity style={{ backgroundColor: "black", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8, opacity: 0.9 }} >
                     <Text style={{ color: "white" }}>Save Recipe</Text>
                 </TouchableOpacity>
 
