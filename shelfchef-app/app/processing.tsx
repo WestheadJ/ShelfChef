@@ -1,4 +1,4 @@
-import { View, ActivityIndicator, Text } from "react-native";
+import { View, ActivityIndicator, Text, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import TextRecognition from "@react-native-ml-kit/text-recognition";
@@ -48,6 +48,9 @@ export default function Processing() {
             {processing === 2 && (
                 <>
                     <Text>There was an error processing the recipe.</Text>
+                    <TouchableOpacity onPress={() => router.back()} style={{ marginTop: 20, padding: 10, backgroundColor: "lightgray", borderRadius: 5 }}>
+                        <Text>Go Back</Text>
+                    </TouchableOpacity>
                 </>
             )}
         </View>
