@@ -14,23 +14,42 @@ export default function Confirm() {
                 style={{ flex: 1 }}
                 resizeMode="contain"
             />
-
-            <TouchableOpacity
+            <View style={{ flexDirection: "row", alignContent: "center" }}><TouchableOpacity
                 onPress={() => router.push({
-                    pathname: "/processing",
-                    params: { photoUri }
+                    pathname: "/capture",
+
                 })}
                 style={{
                     position: "absolute",
-                    bottom: 15,
-                    alignSelf: "center",
-                    backgroundColor: "white",
-                    padding: 20,
+                    bottom: 25,
+
+                    backgroundColor: "lightgray",
+                    padding: 12,
+                    left: 85,
                     borderRadius: 60
                 }}
             >
-                <Text>Confirm and Process</Text>
+                <Text>Go Back</Text>
             </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => router.push({
+                        pathname: "/processing",
+                        params: { photoUri }
+                    })}
+                    style={{
+                        position: "absolute",
+                        bottom: 25,
+                        right: 78,
+                        backgroundColor: "blue",
+                        padding: 12,
+                        borderRadius: 60,
+
+                    }}
+                >
+                    <Text style={{ color: "white" }}>Confirm</Text>
+                </TouchableOpacity>
+            </View>
+
         </View>
     );
 }
