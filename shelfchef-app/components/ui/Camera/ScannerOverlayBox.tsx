@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 
 const cornerStyle = (
     vertical: "top" | "bottom",
@@ -25,12 +25,13 @@ export default function ScannerOverlayBox() {
             pointerEvents="none"
             style={{
                 position: "absolute",
-                top: "10%",
+                top: "5%",
                 left: "5%",
                 width: "90%",
-                height: "70%",
+                height: "80%",
             }}
         >
+            <Text style={{ color: "white", fontWeight: 500, alignSelf: "center", top: 30, maxWidth: "70%", textAlign: "center" }}>Make sure the recipe is in the box</Text>
             <View style={cornerStyle("top", "left")} />
             <View style={cornerStyle("top", "right")} />
             <View style={cornerStyle("bottom", "left")} />

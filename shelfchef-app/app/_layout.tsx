@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
 import { View, Text, SafeAreaView } from "react-native";
-import { RecipeProvider, useRecipeContext } from "../features/recipes/RecipeContext";
+import { RecipeProvider, useRecipeContext } from "../contexts/recipes/RecipeContext";
 import { useEffect, useState } from "react";
 import { useRouter, useSegments } from "expo-router";
 import { Colors } from "@/constants/theme";
