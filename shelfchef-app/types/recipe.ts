@@ -47,4 +47,5 @@ export type Action =
     | { type: "RESET_ALL" }
     | { type: "SET_EDITING_BOOK"; value: boolean }
     | { type: "UPDATE_BOOK_FIELD"; field: "book_title" | "author" | "pageNumber"; value: string | number }
-    | { type: "SET_EDITING_BOOK_FIELD"; field: "book_title" | "author" | "pageNumber" | null };
+    | { type: "SET_EDITING_BOOK_FIELD"; field: "book_title" | "author" | "pageNumber" | null }
+    | { type: "CLEANUP_EDITING" };

@@ -5,9 +5,10 @@ import {
     TouchableOpacity,
     ActivityIndicator
 } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import ScannerOverlayBox from "@/components/ui/Camera/ScannerOverlayBox";
 
 export default function Capture() {
@@ -15,6 +16,8 @@ export default function Capture() {
 
     const [permission, requestPermission] = useCameraPermissions();
     const [processing, setProcessing] = useState(false);
+    const { fromHome: fromHomeParam } = useLocalSearchParams();
+    const fromHome = fromHomeParam === "true";
 
 
 
@@ -26,7 +29,7 @@ export default function Capture() {
 
 
 
-    // -------- CAPTURE --------
+
     const takePhoto = async () => {
         if (!cameraRef.current || processing) return;
 
@@ -100,6 +103,7 @@ export default function Capture() {
         }
     };
 
+
     return (
         <View style={{ flex: 1 }}>
             <View style={{ flex: 1 }}>
@@ -129,7 +133,7 @@ export default function Capture() {
                     style={{
                         position: "absolute",
                         bottom: 20,
-                        alignSelf: "center",
+                        right: 60,
                         backgroundColor: "white",
                         padding: 20,
                         borderRadius: 60
@@ -140,6 +144,8 @@ export default function Capture() {
                     </Text>
                 </TouchableOpacity>
             )}
+
+
 
             {processing && (
                 <View
@@ -156,6 +162,21 @@ export default function Capture() {
                 >
                     <ActivityIndicator size="large" color="white" />
                 </View>
+            )}
+
+            {fromHome && (
+                <TouchableOpacity onPress={() => router.replace({
+                    pathname: "/",
+                })} style={{
+                    position: "absolute",
+                    bottom: 20,
+                    left: 60,
+                    backgroundColor: "white",
+                    padding: 20,
+                    borderRadius: 60
+                }}>
+                    <Text>Go Back</Text>
+                </TouchableOpacity>
             )}
         </View>
     );

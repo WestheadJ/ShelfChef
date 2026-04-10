@@ -30,6 +30,7 @@ app.get("/health", (_req, res) => {
 // ---- Core API endpoint ----
 app.post("/parse-recipe", async (req, res) => {
     try {
+        console.log("parsing")
         const { ocrText } = req.body;
 
         // 1️⃣ Validate input
@@ -176,7 +177,7 @@ app.post("/parse-recipe", async (req, res) => {
                 {
                     role: "system",
                     content:
-                        "Extract structured recipe data from OCR text. Do not include instructions. Do not include commentary."
+                        "Extract structured recipe data from OCR text. Give a confidence on how sure you are of each extraction from 0-1 using decimals to 2DP for example 0.95 Do not include instructions. Do not include commentary."
                 },
                 {
                     role: "user",
@@ -193,13 +194,6 @@ app.post("/parse-recipe", async (req, res) => {
             parsed = JSON.parse(raw);
             console.log("Raw OpenAI response:", raw);
             console.log("Parsed OpenAI response:", parsed);
-            fs.writeFile("books1.json", raw, 'utf8', (err) => {
-                if (err) {
-                    console.error('Error writing to file', err);
-                } else {
-                    console.log('Data written to file');
-                }
-            });
             res.json(parsed);
         } catch (err) {
             console.error("Invalid JSON from OpenAI:", raw);

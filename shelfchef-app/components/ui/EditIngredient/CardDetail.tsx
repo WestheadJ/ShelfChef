@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { IngredientField } from "@/types/recipe";
 
 type Props = {
@@ -7,13 +7,18 @@ type Props = {
 };
 
 export function CardDetail({ ingredient, field }: Props) {
+    const item = ingredient[field];
+    if (!item) return null;  // guard against missing fields
+
+    const confidence = item.confidence;
+    const confidenceLabel = confidence && confidence > 0
+        ? `[confidence: ${(confidence * 100).toFixed(0)}%]`
+        : "";
+
     return (
-        <Text style={{ flexShrink: 1 }}>
-            {ingredient[field].value}
-            <Text style={{ fontSize: 8, opacity: 0.6 }}>
-                {" "}
-                {ingredient[field].confidence === 0 ? null : `[confidence: ${((ingredient[field].confidence || 0) * 100).toFixed(0)}%]`} {/* Show "unrecognized" if confidence is 0 */}
-            </Text>
-        </Text>
+        <View style={{ flexShrink: 1 }}>
+            <Text>{String(item.value ?? "")}</Text>
+            <Text style={{ fontSize: 8, opacity: 0.6 }}>{confidenceLabel}</Text>
+        </View>
     );
 }

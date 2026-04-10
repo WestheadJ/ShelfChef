@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import TextRecognition from "@react-native-ml-kit/text-recognition";
 import { parseRecipeOCR, } from "@/services/api";
+import { capture } from "@/constants/constant";
 
 
 
@@ -17,14 +18,15 @@ export default function Processing() {
         async function run() {
             try {
 
-                setProcessing(1);
-                const result = await TextRecognition.recognize(photoUri as string);
+                // setProcessing(1);
+                // const result = await TextRecognition.recognize(photoUri as string);
 
-                const recipe = await parseRecipeOCR(result.text);
+                // const recipe = await parseRecipeOCR(result.text);
 
                 router.replace({
                     pathname: "/preview",
-                    params: { data: JSON.stringify(recipe), photoUri }
+                    // params: { data: JSON.stringify(recipe), photoUri }
+                    params: { data: JSON.stringify(capture), photoUri }
                 });
 
             } catch (e) {

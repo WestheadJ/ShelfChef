@@ -1,0 +1,182 @@
+{
+    "book": {
+        "author": "",
+        "book_title": "",
+        "pageNumber": {
+            "confidence": 0.9,
+            "value": 1
+        }
+    },
+    "cookTimeMinutes": {
+        "confidence": 0.9,
+        "value": 25
+    },
+    "ingredients": [
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        },
+        {
+            "extraDetail": [Object
+            ],
+            "name": [Object
+            ],
+            "quantity": [Object
+            ],
+            "unit": [Object
+            ]
+        }
+    ],
+    "name": {
+        "confidence": 0.9,
+        "value": "Thai Me Up"
+    },
+    "prepTimeMinutes": {
+        "confidence": 0.9,
+        "value": 10
+    },
+    "servings": {
+        "confidence": 0.9,
+        "value": 4
+    },
+    "totalCookTimeMinutes": {
+        "confidence": 0.9,
+        "value": 35
+    }
+}
