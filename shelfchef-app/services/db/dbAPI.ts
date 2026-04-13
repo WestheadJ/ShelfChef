@@ -16,11 +16,13 @@ export async function getRecipeCount() {
 export async function reset() {
     console.log("RESETTING")
     await db.execAsync(`
-    DROP TABLE IF EXISTS authors;
-    DROP TABLE IF EXISTS books;
-    DROP TABLE IF EXISTS units;
-    DROP TABLE IF EXISTS ingredients;
-    DROP TABLE IF EXISTS recipes;
+    PRAGMA foreign_keys = OFF;
+        DROP TABLE IF EXISTS ingredients;
+        DROP TABLE IF EXISTS units;
+        DROP TABLE IF EXISTS recipes;
+        DROP TABLE IF EXISTS books;
+        DROP TABLE IF EXISTS authors;
+        PRAGMA foreign_keys = ON;
   `);
     await initDatabase();
 }

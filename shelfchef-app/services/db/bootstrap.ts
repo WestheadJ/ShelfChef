@@ -13,10 +13,11 @@ export const initDatabase = async () => {
     );
 
     CREATE TABLE IF NOT EXISTS books (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      book_id INTEGER PRIMARY KEY AUTOINCREMENT,
       title TEXT,
       author_id INTEGER,
       FOREIGN KEY(author_id) REFERENCES authors(id)
+      UNIQUE(title, author_id)
     );
 
     CREATE TABLE IF NOT EXISTS recipes (
