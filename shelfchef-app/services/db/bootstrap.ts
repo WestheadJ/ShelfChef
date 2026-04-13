@@ -31,6 +31,7 @@ export const initDatabase = async () => {
       created_at TEXT,
       updated_at TEXT,
       FOREIGN KEY(book_id) REFERENCES books(id)
+      UNIQUE(name,book_id)
     );
 
     CREATE TABLE IF NOT EXISTS units (

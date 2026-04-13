@@ -80,7 +80,16 @@ async function insertBook(db: any, title: string, authorId: number) {
 async function insertRecipe(db: any, data: any) {
     let isRecipe = false;
     try {
-        const result = await db.runAsync();
+        const result = await db.runAsync("INSERT INTO recipes (name, page_number, book_id, prep_time, cook_time, total_time) VALUES (?, ?, ?, ?, ?, ?)", [
+            data.name.value,
+            data.book.pageNumber.value,
+            data.book.book_id,
+            data.prepTimeMinutes.value,
+            data.cookTimeMinutes.value,
+            data.totalCookTimeMinutes.value
+        ]);
+        isRecipe = result.changes > 0;
+        console.log("RECIPE INSERT RESULT:", result);
 
     }
     catch (err) {
