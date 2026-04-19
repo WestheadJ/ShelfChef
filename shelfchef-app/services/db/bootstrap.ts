@@ -13,10 +13,10 @@ export const initDatabase = async () => {
     );
 
     CREATE TABLE IF NOT EXISTS books (
-      book_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      book_id INTEGER PRIMARY KEY AUTOINCREMENT, -- This is named book_id
       title TEXT,
       author_id INTEGER,
-      FOREIGN KEY(author_id) REFERENCES authors(id)
+      FOREIGN KEY(author_id) REFERENCES authors(id),
       UNIQUE(title, author_id)
     );
 
@@ -30,14 +30,9 @@ export const initDatabase = async () => {
       total_time TEXT,
       created_at TEXT,
       updated_at TEXT,
-      FOREIGN KEY(book_id) REFERENCES books(id)
-      UNIQUE(name,book_id)
-    );
-
-    CREATE TABLE IF NOT EXISTS units (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT,
-      symbol TEXT
+      -- FIX: Changed 'books(id)' to 'books(book_id)'
+      FOREIGN KEY(book_id) REFERENCES books(book_id), 
+      UNIQUE(name, book_id)
     );
 
     CREATE TABLE IF NOT EXISTS ingredients (
@@ -45,10 +40,9 @@ export const initDatabase = async () => {
       recipe_id INTEGER,
       name TEXT,
       quantity REAL,
-      unit_id INTEGER,
+      unit TEXT,
       extra_detail TEXT,
-      FOREIGN KEY(recipe_id) REFERENCES recipes(id),
-      FOREIGN KEY(unit_id) REFERENCES units(id)
+      FOREIGN KEY(recipe_id) REFERENCES recipes(id)
     );
   `);
 };
