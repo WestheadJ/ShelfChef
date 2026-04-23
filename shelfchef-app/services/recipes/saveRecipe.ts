@@ -1,13 +1,14 @@
 import { insertRecipe } from "../db/dbAPI";
 
-export default function saveRecipe(data: any) {
+export default async function saveRecipe(data: any) {
     const field = checkFields(data);
     console.log("DATA CHECK", data)
     if (field[0] === false) {
-        return field
+        return [false, field]
     }
     else {
-        insertRecipe(data);
+        await insertRecipe(data);
+        return [true];
     }
 }
 
@@ -30,7 +31,5 @@ function checkFields(data: any) {
     if (firstEmpty) {
         return [false, emptyFields];
     }
-
-
     return [true];
 }

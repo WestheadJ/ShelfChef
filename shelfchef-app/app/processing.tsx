@@ -17,12 +17,6 @@ export default function Processing() {
     useEffect(() => {
         async function run() {
             try {
-
-                // setProcessing(1);
-                // const result = await TextRecognition.recognize(photoUri as string);
-
-                // const recipe = await parseRecipeOCR(result.text);
-
                 router.replace({
                     pathname: "/preview",
                     // params: { data: JSON.stringify(recipe), photoUri }

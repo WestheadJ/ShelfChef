@@ -113,7 +113,11 @@ export default function Preview() {
                             let fields = saved[1].map((itm: any) => itm.label.replace("_", " ")).join(", ");
                             Alert.alert("Empty Fields", `These fields are empty: \n${fields}`, ["close"]);
                         }
+                        else {
+                            router.push({ pathname: "/", params: { refresh: true } });
+                        }
                     }}
+
                 >
                     <Text style={{ color: "white" }}>Save Recipe</Text>
                 </TouchableOpacity>
@@ -121,10 +125,10 @@ export default function Preview() {
 
             <TouchableOpacity
                 style={{ position: "absolute", top: 0, right: 1, backgroundColor: "black", paddingHorizontal: 20, paddingVertical: 10, borderRadius: 8 }}
-                onPress={async () => await reset()}
+                onPress={async () => { await reset(); router.push("/capture") }}
             >
                 <Text style={{ color: "white" }}>Reset DB</Text>
             </TouchableOpacity>
-        </View>
+        </View >
     );
 }
