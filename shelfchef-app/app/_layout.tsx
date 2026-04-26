@@ -1,6 +1,6 @@
 import { Stack } from "expo-router";
-import { View, Text, SafeAreaView } from "react-native";
-import { RecipeProvider, useRecipeContext } from "../contexts/recipes/RecipeContext";
+import { View, Text, SafeAreaView, StyleSheet } from "react-native";
+import { RecipeProvider } from "../contexts/recipes/RecipeContext";
 import { useEffect, useState } from "react";
 import { useRouter, useSegments } from "expo-router";
 import { Colors } from "@/constants/theme";
@@ -34,7 +34,7 @@ function RecipeGuard({ children }: { children: React.ReactNode }) {
 
   if (checking) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={styles.loadingContainer}>
         <Text>Loading app...</Text>
       </View>
     );
@@ -48,7 +48,7 @@ export default function RootLayout() {
     <DBProvider>
       <RecipeProvider>
         <RecipeGuard>
-          <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
+          <SafeAreaView style={styles.safeArea}>
 
             <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="index" />
@@ -70,3 +70,15 @@ export default function RootLayout() {
     </DBProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  safeArea: {
+    flex: 1,
+    backgroundColor: Colors.light.background
+  }
+});

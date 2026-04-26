@@ -1,10 +1,12 @@
-import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from "react-native";
 import { router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { useRecipeContext } from "@/contexts/recipes/RecipeContext";
 import { EditIngredientCard } from "@/components/ui/EditIngredient/EditIngredientCard";
 import { IngredientField } from "@/types/recipe";
 import { useEffect } from "react";
+import LabeledTextInput from "@/components/ui/Form/LabeledTextInput";
+import SectionTitle from "@/components/ui/Typography/SectionTitle";
+import AppButton from "@/components/ui/Button/AppButton";
 
 export default function EditModal() {
     const { state, dispatch } = useRecipeContext();
@@ -31,68 +33,60 @@ export default function EditModal() {
 
     return (
         <KeyboardAvoidingView
-            style={{ flex: 1, backgroundColor: "white" }}
+            style={styles.container}
             behavior={Platform.OS === "ios" ? "padding" : undefined}
         >
-            <View style={{ flexDirection: "row", justifyContent: "space-between", padding: 20, borderBottomWidth: 1, borderColor: "#eee" }}>
-                <Text style={{ fontSize: 18, fontWeight: "bold" }}>Edit Details</Text>
+            <View style={styles.header}>
+                <Text style={styles.headerTitle}>Edit Details</Text>
                 <TouchableOpacity onPress={handleDone}>
-                    <Text style={{ fontSize: 16, color: "blue", fontWeight: "600" }}>Done</Text>
+                    <Text style={styles.doneText}>Done</Text>
                 </TouchableOpacity>
             </View>
 
-            <ScrollView style={{ padding: 20 }}>
+            <ScrollView style={styles.content}>
                 {state.editingTitle && (
-                    <View>
-                        <Text style={{ marginBottom: 8, color: "gray" }}>Recipe Name</Text>
-                        <TextInput
-                            value={state.recipeData.name?.value ?? ""}
-                            autoFocus
-                            autoCapitalize="words"
-                            onChangeText={(text) => dispatch({ type: "UPDATE_RECIPE_NAME", value: text })}
-                            style={{ fontSize: 18, borderBottomWidth: 1, borderColor: "#ccc", paddingVertical: 8 }}
-                        />
-                    </View>
+                    <LabeledTextInput
+                        label="Recipe Name"
+                        value={state.recipeData.name?.value ?? ""}
+                        autoFocus
+                        autoCapitalize="words"
+                        onChangeText={(text) => dispatch({ type: "UPDATE_RECIPE_NAME", value: text })}
+                    />
                 )}
 
                 {state.editingBookField && (
-                    <View>
-                        <Text style={{ marginBottom: 8, color: "gray", textTransform: "capitalize" }}>
-                            {state.editingBookField.replace("_", " ")}
-                        </Text>
-                        <TextInput
-                            value={String(state.recipeData.book[state.editingBookField]?.value ?? state.recipeData.book[state.editingBookField] ?? "")}
-                            autoFocus
-                            autoCapitalize="words"
-
-                            keyboardType={state.editingBookField === "pageNumber" ? "numeric" : "default"}
-                            onChangeText={(text) => dispatch({ type: "UPDATE_BOOK_FIELD", field: state.editingBookField!, value: text })}
-                            style={{ fontSize: 18, borderBottomWidth: 1, borderColor: "#ccc", paddingVertical: 8 }}
-                        />
-                    </View>
+                    <LabeledTextInput
+                        label={state.editingBookField.replace("_", " ")}
+                        labelStyle={styles.fieldLabelCapitalized}
+                        value={String(state.recipeData.book[state.editingBookField]?.value ?? state.recipeData.book[state.editingBookField] ?? "")}
+                        autoFocus
+                        autoCapitalize="words"
+                        keyboardType={state.editingBookField === "pageNumber" ? "numeric" : "default"}
+                        onChangeText={(text) => dispatch({ type: "UPDATE_BOOK_FIELD", field: state.editingBookField!, value: text })}
+                    />
                 )}
 
                 {state.editingIndex !== null && state.recipeData.ingredients[state.editingIndex] && (
                     <View>
-                        <Text style={{ marginBottom: 15, fontSize: 16, fontWeight: "bold" }}>Editing Ingredient</Text>
+                        <SectionTitle title="Editing Ingredient" style={styles.ingredientTitle} />
 
                         <EditIngredientCard
                             ingredient={state.recipeData.ingredients[state.editingIndex]}
                             index={state.editingIndex} label="Quantity:" field="quantity"
                             updateIngredient={updateIngredient} keyboardType="numeric"
-                            style={{ flex: 1, borderBottomWidth: 1, borderColor: "#ccc", padding: 8 }}
+                            style={styles.ingredientInput}
                         />
                         <EditIngredientCard
                             ingredient={state.recipeData.ingredients[state.editingIndex]}
                             index={state.editingIndex} label="Unit:" field="unit"
                             updateIngredient={updateIngredient}
-                            style={{ flex: 1, borderBottomWidth: 1, borderColor: "#ccc", padding: 8 }}
+                            style={styles.ingredientInput}
                         />
                         <EditIngredientCard
                             ingredient={state.recipeData.ingredients[state.editingIndex]}
                             index={state.editingIndex} label="Name:" field="name"
                             updateIngredient={updateIngredient}
-                            style={{ flex: 1, borderBottomWidth: 1, borderColor: "#ccc", padding: 8 }}
+                            style={styles.ingredientInput}
                         />
 
                         {state.recipeData.ingredients[state.editingIndex]?.extraDetail?.value ? (
@@ -100,15 +94,16 @@ export default function EditModal() {
                                 ingredient={state.recipeData.ingredients[state.editingIndex]}
                                 index={state.editingIndex} label="Extra Detail:" field="extraDetail"
                                 updateIngredient={updateIngredient}
-                                style={{ flex: 1, borderBottomWidth: 1, borderColor: "#ccc", padding: 8 }}
+                                style={styles.ingredientInput}
                             />
                         ) : (
-                            <TouchableOpacity
-                                style={{ marginTop: 20, alignSelf: "flex-start", backgroundColor: "#eee", padding: 10, borderRadius: 8 }}
+                            <AppButton
+                                title="+ Add Extra Detail"
+                                variant="light"
+                                style={styles.addDetailButton}
                                 onPress={() => dispatch({ type: "ADD_EXTRA_DETAIL", index: state.editingIndex! })}
-                            >
-                                <Text style={{ color: "black", fontWeight: "500" }}>+ Add Extra Detail</Text>
-                            </TouchableOpacity>
+                                textStyle={styles.addDetailText}
+                            />
                         )}
                     </View>
                 )}
@@ -116,3 +111,51 @@ export default function EditModal() {
         </KeyboardAvoidingView>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: "white"
+    },
+    header: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        padding: 20,
+        borderBottomWidth: 1,
+        borderColor: "#eee"
+    },
+    headerTitle: {
+        fontSize: 18,
+        fontWeight: "bold"
+    },
+    doneText: {
+        fontSize: 16,
+        color: "blue",
+        fontWeight: "600"
+    },
+    content: {
+        padding: 20
+    },
+    fieldLabelCapitalized: {
+        textTransform: "capitalize"
+    },
+    ingredientTitle: {
+        marginBottom: 15,
+        fontSize: 16
+    },
+    ingredientInput: {
+        flex: 1,
+        borderBottomWidth: 1,
+        borderColor: "#ccc",
+        padding: 8
+    },
+    addDetailButton: {
+        marginTop: 20,
+        alignSelf: "flex-start",
+        backgroundColor: "#eee"
+    },
+    addDetailText: {
+        color: "black",
+        fontWeight: "500"
+    }
+});

@@ -5,6 +5,8 @@ import { reset, getRecentRecipes, deleteRecipe } from "@/services/db/dbAPI"; // 
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from "@expo/vector-icons";
+import AppButton from "@/components/ui/Button/AppButton";
+import RecentRecipeCard from "@/components/ui/Recipe/RecentRecipeCard";
 
 export default function Home() {
     const [recipes, setRecipes] = useState<any[]>([]);
@@ -70,60 +72,31 @@ export default function Home() {
     }
 
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={styles.root}>
             <View style={styles.container}>
                 {recipes.length === 0 ? (
                     <View style={styles.center}>
                         <Text>No recipes yet.</Text>
-                        <TouchableOpacity
+                        <AppButton
+                            title="Scan Cookbook"
                             onPress={() => router.push("/capture?fromHome=true")}
                             style={styles.button}
-                        >
-                            <Text style={{ color: "white" }}>Scan Cookbook</Text>
-                        </TouchableOpacity>
+                        />
                     </View>
                 ) : (
                     <FlatList
                         data={recipes}
                         keyExtractor={(item) => item.recipeID.toString()}
-                        contentContainerStyle={{ padding: 16 }}
+                        contentContainerStyle={styles.listContent}
                         renderItem={({ item }) => (
                             <Swipeable
                                 renderRightActions={() => renderRightActions(item)}
                                 containerStyle={styles.swipeableContainer}
                             >
-                                <TouchableOpacity
+                                <RecentRecipeCard
+                                    item={item}
                                     onPress={() => router.push({ pathname: "/preview", params: item })}
-                                    style={styles.card}
-                                    activeOpacity={1} // Prevents card from flickering when swiping
-                                >
-                                    <Text style={styles.title}>{item.recipeName}</Text>
-
-                                    <Text style={styles.bookText}>
-                                        {item.bookTitle ? `Book: ${item.bookTitle}` : "Unknown Book"}
-                                        {item.authorName ? ` by ${item.authorName}` : ""}
-                                        {item.page_number ? ` (Page ${item.page_number})` : ""}
-                                    </Text>
-
-                                    <View style={styles.timeContainer}>
-                                        <Text style={styles.timeText}>Prep: {item.prep_time || '--'} </Text>
-                                        <Text style={styles.timeText}>Cook: {item.cook_time || '--'} </Text>
-                                        <Text style={styles.timeText}>Total: {item.total_time || '--'} min</Text>
-                                    </View>
-
-                                    <View style={styles.ingredientsContainer}>
-                                        {(Array.isArray(item.ingredients) ? item.ingredients : []).slice(0, 5).map((ingredient: string, index: number) => (
-                                            <Text key={`${ingredient}-${index}`} style={styles.ingredient}>
-                                                {ingredient}
-                                            </Text>
-                                        ))}
-                                        {(Array.isArray(item.ingredients) && item.ingredients.length > 5) && (
-                                            <Text style={styles.ingredient}>
-                                                +{item.ingredients.length - 5} more
-                                            </Text>
-                                        )}
-                                    </View>
-                                </TouchableOpacity>
+                                />
                             </Swipeable>
                         )}
                     />
@@ -131,19 +104,17 @@ export default function Home() {
 
                 {/* Bottom Buttons */}
                 <View style={styles.bottomActions}>
-                    <TouchableOpacity
+                    <AppButton
+                        title="Capture"
                         style={styles.footerButton}
                         onPress={() => router.push({ pathname: "/capture", params: { fromHome: true } })}
-                    >
-                        <Text style={{ color: "white" }}>Capture</Text>
-                    </TouchableOpacity>
+                    />
 
-                    <TouchableOpacity
+                    <AppButton
+                        title="Reset DB"
                         style={styles.footerButton}
                         onPress={async () => { await reset(); setRecipes([]); router.push("/capture") }}
-                    >
-                        <Text style={{ color: "white" }}>Reset DB</Text>
-                    </TouchableOpacity>
+                    />
                 </View>
             </View>
         </GestureHandlerRootView>
@@ -151,6 +122,9 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
+    root: {
+        flex: 1
+    },
     container: {
         flex: 1,
         backgroundColor: "#f8f8f8"
@@ -171,11 +145,6 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 2,
     },
-    card: {
-        backgroundColor: "white",
-        padding: 16,
-        // borderRadius and marginBottom are handled by swipeableContainer
-    },
     deleteButton: {
         width: 80,
         backgroundColor: "#FF3B30",
@@ -188,46 +157,14 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginTop: 4,
     },
-    title: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginBottom: 4
-    },
-    bookText: {
-        fontSize: 14,
-        color: "#555",
-        marginBottom: 12
-    },
-    timeContainer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        borderTopWidth: 1,
-        borderTopColor: "#eee",
-        paddingTop: 10
-    },
-    timeText: {
-        fontSize: 13,
-        color: "#777",
-        fontWeight: "500"
-    },
-    ingredientsContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        marginTop: 10,
-        gap: 6
-    },
-    ingredient: {
-        backgroundColor: "#eee",
-        paddingHorizontal: 8,
-        paddingVertical: 4,
-        borderRadius: 8,
-        fontSize: 12
-    },
     button: {
         marginTop: 20,
         padding: 15,
         backgroundColor: "#222",
         borderRadius: 12
+    },
+    listContent: {
+        padding: 16
     },
     bottomActions: {
         position: "absolute",
@@ -239,9 +176,6 @@ const styles = StyleSheet.create({
     },
     footerButton: {
         backgroundColor: "black",
-        paddingHorizontal: 20,
-        paddingVertical: 12,
-        borderRadius: 8,
         minWidth: 100,
         alignItems: "center"
     }

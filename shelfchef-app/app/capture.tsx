@@ -3,13 +3,14 @@ import {
     View,
     Text,
     TouchableOpacity,
-    ActivityIndicator
+    ActivityIndicator,
+    StyleSheet
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { router, useLocalSearchParams } from "expo-router";
 import ScannerOverlayBox from "@/components/ui/Camera/ScannerOverlayBox";
+import AppButton from "@/components/ui/Button/AppButton";
 
 export default function Capture() {
     const cameraRef = useRef<CameraView | null>(null);
@@ -59,7 +60,7 @@ export default function Capture() {
     // -------- PERMISSION UI --------
     if (!permission) {
         return (
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <View style={styles.centeredContainer}>
                 <Text>Checking camera permissions…</Text>
             </View>
         );
@@ -67,28 +68,16 @@ export default function Capture() {
 
     if (!permission.granted) {
         return (
-            <View style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                padding: 20
-            }}>
-                <Text style={{ textAlign: "center" }}>
+            <View style={styles.permissionContainer}>
+                <Text style={styles.centeredText}>
                     Camera permission is required to scan recipes.
                 </Text>
 
-                <TouchableOpacity
+                <AppButton
+                    title="Grant Camera Permission"
                     onPress={requestPermission}
-                    style={{
-                        marginTop: 20,
-                        backgroundColor: "#222",
-                        paddingHorizontal: 20,
-                        paddingVertical: 12,
-                        borderRadius: 10
-                    }}
-                >
-                    <Text style={{ color: "white" }}>Grant Camera Permission</Text>
-                </TouchableOpacity>
+                    style={styles.permissionButton}
+                />
             </View>
         );
     }
@@ -105,16 +94,16 @@ export default function Capture() {
 
 
     return (
-        <View style={{ flex: 1 }}>
-            <View style={{ flex: 1 }}>
+        <View style={styles.container}>
+            <View style={styles.cameraContainer}>
                 <TouchableOpacity
                     activeOpacity={1}
-                    style={{ flex: 1 }}
+                    style={styles.fullFlex}
                     onPress={handleFocus}
                 >
                     <CameraView
                         ref={cameraRef}
-                        style={{ flex: 1 }}
+                        style={styles.fullFlex}
                         facing="back"
                         autofocus="on"
                         active={true}
@@ -127,57 +116,100 @@ export default function Capture() {
             <ScannerOverlayBox />
 
             {!processing && (
-                <TouchableOpacity
-
+                <AppButton
+                    title="Scan Page"
                     onPress={takePhoto}
-                    style={{
-                        position: "absolute",
-                        bottom: 20,
-                        right: 60,
-                        backgroundColor: "white",
-                        padding: 20,
-                        borderRadius: 60
-                    }}
-                >
-                    <Text style={{ fontWeight: "600" }}>
-                        Scan Page
-                    </Text>
-                </TouchableOpacity>
+                    style={styles.scanButton}
+                    textStyle={styles.scanButtonText}
+                />
             )}
 
 
 
             {processing && (
                 <View
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: "rgba(0,0,0,0.6)"
-                    }}
+                    style={styles.processingOverlay}
                 >
                     <ActivityIndicator size="large" color="white" />
                 </View>
             )}
 
             {fromHome && (
-                <TouchableOpacity onPress={() => router.replace({
+                <AppButton title="Go Back" onPress={() => router.replace({
                     pathname: "/",
-                })} style={{
-                    position: "absolute",
-                    bottom: 20,
-                    left: 60,
-                    backgroundColor: "white",
-                    padding: 20,
-                    borderRadius: 60
-                }}>
-                    <Text>Go Back</Text>
-                </TouchableOpacity>
+                })} style={styles.backButton} textStyle={styles.backButtonText}>
+
+                </AppButton>
             )}
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    cameraContainer: {
+        flex: 1
+    },
+    fullFlex: {
+        flex: 1
+    },
+    centeredContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    permissionContainer: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 20
+    },
+    centeredText: {
+        textAlign: "center"
+    },
+    permissionButton: {
+        marginTop: 20,
+        backgroundColor: "#222",
+        borderRadius: 10
+    },
+    scanButton: {
+        position: "absolute",
+        bottom: 20,
+        right: 60,
+        backgroundColor: "white",
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        borderRadius: 60
+    },
+    scanButtonText: {
+        fontWeight: "600",
+        color: "black"
+    },
+    processingOverlay: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0,0,0,0.6)"
+    },
+    backButton: {
+        position: "absolute",
+        bottom: 20,
+        left: 60,
+
+        backgroundColor: "white",
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+        borderRadius: 60
+    },
+
+    backButtonText: {
+        color: "black",
+        fontWeight: "600"
+    }
+});

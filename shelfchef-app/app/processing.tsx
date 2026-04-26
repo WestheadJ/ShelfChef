@@ -1,9 +1,10 @@
-import { View, ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
 import TextRecognition from "@react-native-ml-kit/text-recognition";
 import { parseRecipeOCR, } from "@/services/api";
 import { capture } from "@/constants/constant";
+import AppButton from "@/components/ui/Button/AppButton";
 
 
 
@@ -32,7 +33,7 @@ export default function Processing() {
     }, []);
 
     return (
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <View style={styles.container}>
             {/* <ActivityIndicator size="large" />
             <Text>Processing recipe…</Text> */}
             {processing === 1 && (
@@ -44,11 +45,22 @@ export default function Processing() {
             {processing === 2 && (
                 <>
                     <Text>There was an error processing the recipe.</Text>
-                    <TouchableOpacity onPress={() => router.back()} style={{ marginTop: 20, padding: 10, backgroundColor: "lightgray", borderRadius: 5 }}>
-                        <Text>Go Back</Text>
-                    </TouchableOpacity>
+                    <AppButton title="Go Back" variant="light" onPress={() => router.back()} style={styles.backButton} />
                 </>
             )}
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    backButton: {
+        marginTop: 20,
+        backgroundColor: "lightgray",
+        borderRadius: 5
+    }
+});

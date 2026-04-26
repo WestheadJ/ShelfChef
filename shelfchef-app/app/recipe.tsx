@@ -6,9 +6,16 @@ import { useState } from "react";
 export default function Home() {
 
     return (
-        <View >
-            <Text style={{ fontSize: 24, fontWeight: "bold", margin: 20 }}>View Recipe</Text>
+        <View>
+            <Text style={styles.title}>View Recipe</Text>
         </View>
     );
 }
 
+const styles = StyleSheet.create({
+    title: {
+        fontSize: 24,
+        fontWeight: "bold",
+        margin: 20
+    }
+});
