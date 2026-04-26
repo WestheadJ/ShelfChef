@@ -48,6 +48,7 @@ export default function EditModal() {
                         <TextInput
                             value={state.recipeData.name?.value ?? ""}
                             autoFocus
+                            autoCapitalize="words"
                             onChangeText={(text) => dispatch({ type: "UPDATE_RECIPE_NAME", value: text })}
                             style={{ fontSize: 18, borderBottomWidth: 1, borderColor: "#ccc", paddingVertical: 8 }}
                         />
@@ -62,6 +63,8 @@ export default function EditModal() {
                         <TextInput
                             value={String(state.recipeData.book[state.editingBookField]?.value ?? state.recipeData.book[state.editingBookField] ?? "")}
                             autoFocus
+                            autoCapitalize="words"
+
                             keyboardType={state.editingBookField === "pageNumber" ? "numeric" : "default"}
                             onChangeText={(text) => dispatch({ type: "UPDATE_BOOK_FIELD", field: state.editingBookField!, value: text })}
                             style={{ fontSize: 18, borderBottomWidth: 1, borderColor: "#ccc", paddingVertical: 8 }}

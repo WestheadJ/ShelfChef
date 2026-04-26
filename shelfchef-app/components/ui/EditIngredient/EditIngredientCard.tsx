@@ -25,6 +25,8 @@ export function EditIngredientCard({
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8, marginTop: 8 }}>
             <Text>{label}</Text>
             <TextInput
+                autoCapitalize="words"
+
                 value={String(ingredient[field]?.value ?? "")}
                 onChangeText={(text) => updateIngredient(index, field, text)}
                 style={style}

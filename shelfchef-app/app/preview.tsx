@@ -114,7 +114,8 @@ export default function Preview() {
                             Alert.alert("Empty Fields", `These fields are empty: \n${fields}`, ["close"]);
                         }
                         else {
-                            router.push({ pathname: "/", params: { refresh: true } });
+                            router.dismissAll();
+                            router.replace("/");
                         }
                     }}
 

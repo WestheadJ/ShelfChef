@@ -1,6 +1,7 @@
 import * as SQLite from "expo-sqlite";
 import { initDatabase } from "./bootstrap";
 import { saveRecipe } from "./recipes/saveRecipeSCHEMA";
+import deleteRecipeSCHEMA from "./recipes/deleteRecipeSCHEMA";
 
 const db = SQLite.openDatabaseSync("shelfchef.db");
 
@@ -67,4 +68,8 @@ export async function getIngredients() {
     );
     console.log("INGREDIENTS DB RESULT", result)
     return result;
+}
+
+export async function deleteRecipe(recipeID: number) {
+    return await deleteRecipeSCHEMA(db, recipeID);
 }
