@@ -52,7 +52,6 @@
           }
         }
       ],
-      "expo-build-properties",
       "expo-sqlite"
     ],
     "experiments": {

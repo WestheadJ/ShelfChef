@@ -26,7 +26,7 @@ export default function Preview() {
             const parsed = normalizeRecipe(JSON.parse(data as string));
             setInitialRecipe(parsed);
         }
-    }, [data]);
+    }, [data, setInitialRecipe, state.recipeData]);
 
     if (!state.recipeData) return null;
 

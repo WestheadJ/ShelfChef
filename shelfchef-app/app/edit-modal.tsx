@@ -17,7 +17,7 @@ export default function EditModal() {
         return () => {
             dispatch({ type: "CLEANUP_EDITING" });
         };
-    }, []);
+    }, [dispatch]);
 
     const handleDone = () => {
         router.back();

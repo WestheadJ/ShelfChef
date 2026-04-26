@@ -1,8 +1,7 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter, useSegments } from "expo-router";
 import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import { RecipeProvider } from "../contexts/recipes/RecipeContext";
 import { useEffect, useState } from "react";
-import { useRouter, useSegments } from "expo-router";
 import { Colors } from "@/constants/theme";
 import { DBProvider, useDBContext } from "@/contexts/DBContext";
 import { getRecipeCount } from "@/services/db/dbAPI";
@@ -18,9 +17,16 @@ function RecipeGuard({ children }: { children: React.ReactNode }) {
 
     async function guard() {
       const stored = await getRecipeCount();
-      console.log(stored)
+      const allowedWhenEmpty = new Set([
+        "capture",
+        "confirm",
+        "processing",
+        "preview",
+        "edit-modal"
+      ]);
+
       if (stored?.count === 0) {
-        if (segments[0] !== "capture") {
+        if (!allowedWhenEmpty.has(segments[0] ?? "")) {
           router.replace("/capture");
         }
       }
@@ -30,7 +36,7 @@ function RecipeGuard({ children }: { children: React.ReactNode }) {
 
     guard();
 
-  }, [ready]);
+  }, [ready, router, segments]);
 
   if (checking) {
     return (

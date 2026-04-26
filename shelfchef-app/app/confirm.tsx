@@ -1,9 +1,28 @@
 import { View, Image, Text, StyleSheet } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import AppButton from "@/components/ui/Button/AppButton";
+import { getCapturedPhotoUri } from "@/services/capture/captureSession";
 
 export default function Confirm() {
     const { photoUri } = useLocalSearchParams();
+    const resolvedPhotoUri =
+        getCapturedPhotoUri() ??
+        (Array.isArray(photoUri) ? photoUri[0] : photoUri) ??
+        null;
+
+    if (!resolvedPhotoUri) {
+        return (
+            <View style={styles.container}>
+                <Text style={styles.title}>Could not load the captured photo.</Text>
+                <View style={styles.missingPhotoActions}>
+                    <AppButton
+                        title="Back To Camera"
+                        onPress={() => router.replace("/capture")}
+                    />
+                </View>
+            </View>
+        );
+    }
 
     return (
         <View style={styles.container}>
@@ -11,7 +30,7 @@ export default function Confirm() {
                 Are the ingredients of the recipe in the photo?
             </Text>
             <Image
-                source={{ uri: photoUri as string }}
+                source={{ uri: resolvedPhotoUri }}
                 style={styles.image}
                 resizeMode="contain"
             />
@@ -29,7 +48,7 @@ export default function Confirm() {
                     variant="accent"
                     onPress={() => router.push({
                         pathname: "/processing",
-                        params: { photoUri }
+                        params: { photoUri: resolvedPhotoUri }
                     })}
                     style={styles.confirmButton}
                 />
@@ -55,6 +74,10 @@ const styles = StyleSheet.create({
     actionRow: {
         flexDirection: "row",
         alignContent: "center"
+    },
+    missingPhotoActions: {
+        paddingHorizontal: 20,
+        paddingBottom: 40
     },
     backButton: {
         position: "absolute",

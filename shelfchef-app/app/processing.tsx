@@ -1,17 +1,20 @@
 import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
 import { useEffect, useState } from "react";
 import { router, useLocalSearchParams } from "expo-router";
-import TextRecognition from "@react-native-ml-kit/text-recognition";
-import { parseRecipeOCR, } from "@/services/api";
 import { capture } from "@/constants/constant";
 import AppButton from "@/components/ui/Button/AppButton";
+import { clearCapturedPhotoUri, getCapturedPhotoUri } from "@/services/capture/captureSession";
 
 
 
 
 export default function Processing() {
-    let { photoUri } = useLocalSearchParams();
+    const { photoUri } = useLocalSearchParams();
     const [processing, setProcessing] = useState(0);
+    const resolvedPhotoUri =
+        getCapturedPhotoUri() ??
+        (Array.isArray(photoUri) ? photoUri[0] : photoUri) ??
+        null;
 
 
 
@@ -21,16 +24,17 @@ export default function Processing() {
                 router.replace({
                     pathname: "/preview",
                     // params: { data: JSON.stringify(recipe), photoUri }
-                    params: { data: JSON.stringify(capture), photoUri }
+                    params: { data: JSON.stringify(capture), photoUri: resolvedPhotoUri ?? "" }
                 });
+                clearCapturedPhotoUri();
 
-            } catch (e) {
+            } catch {
                 return setProcessing(2);
             }
         }
 
         run();
-    }, []);
+    }, [resolvedPhotoUri]);
 
     return (
         <View style={styles.container}>

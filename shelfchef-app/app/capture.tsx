@@ -11,6 +11,7 @@ import { CameraView, useCameraPermissions } from "expo-camera";
 import { router, useLocalSearchParams } from "expo-router";
 import ScannerOverlayBox from "@/components/ui/Camera/ScannerOverlayBox";
 import AppButton from "@/components/ui/Button/AppButton";
+import { setCapturedPhotoUri } from "@/services/capture/captureSession";
 
 export default function Capture() {
     const cameraRef = useRef<CameraView | null>(null);
@@ -26,7 +27,7 @@ export default function Capture() {
         if (!permission?.granted) {
             requestPermission();
         }
-    }, [permission]);
+    }, [permission, requestPermission]);
 
 
 
@@ -43,6 +44,7 @@ export default function Capture() {
 
             if (!photo?.uri) return;
 
+            setCapturedPhotoUri(photo.uri);
             router.push({
                 pathname: "/confirm",
                 params: {
@@ -138,7 +140,6 @@ export default function Capture() {
                 <AppButton title="Go Back" onPress={() => router.replace({
                     pathname: "/",
                 })} style={styles.backButton} textStyle={styles.backButtonText}>
-
                 </AppButton>
             )}
         </View>
