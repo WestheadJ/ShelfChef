@@ -10,7 +10,7 @@ type RecentRecipeRow = {
     ingredients: string | null;
 };
 
-export default async function getRecentRecipesSCHEMA(db: any, limit: number = 10) {
+export default async function getRecentRecipesSCHEMA(db: any) {
     const result = await db.getAllAsync<RecentRecipeRow>(
         `SELECT
             r.id as recipeID,
@@ -28,8 +28,7 @@ export default async function getRecentRecipesSCHEMA(db: any, limit: number = 10
         LEFT JOIN ingredients i ON r.id = i.recipe_id
         GROUP BY r.id
         ORDER BY r.created_at DESC
-        LIMIT ?`,
-        [limit]
+        `,
     );
 
     const formatted = result.map((row) => ({

@@ -15,7 +15,7 @@ export default function Home() {
     // Fetch recipes from DB
     const fetchRecipes = async () => {
         try {
-            const data = await getRecentRecipes(10);
+            const data = await getRecentRecipes();
             setRecipes(data);
             // If no recipes exist, automatically go to the camera
             if (data.length === 0) {
