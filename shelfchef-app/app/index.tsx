@@ -95,7 +95,11 @@ export default function Home() {
                             >
                                 <RecentRecipeCard
                                     item={item}
-                                    onPress={() => router.push({ pathname: "/preview", params: item })}
+                                    onPress={() => {
+                                        console.log("Navigating to view recipe with ID:", item.recipeID);
+                                        router.push({ pathname: "/view-recipe", params: { data: JSON.stringify(item) } });
+
+                                    }}
                                 />
                             </Swipeable>
                         )}

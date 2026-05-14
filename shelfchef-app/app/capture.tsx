@@ -137,9 +137,7 @@ export default function Capture() {
             )}
 
             {fromHome && (
-                <AppButton title="Go Back" onPress={() => router.replace({
-                    pathname: "/",
-                })} style={styles.backButton} textStyle={styles.backButtonText}>
+                <AppButton title="Go Back" onPress={() => { router.dismissAll(); router.replace("/") }} style={styles.backButton} textStyle={styles.backButtonText}>
                 </AppButton>
             )}
         </View>

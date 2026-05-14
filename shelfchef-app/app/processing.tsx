@@ -21,6 +21,7 @@ export default function Processing() {
     useEffect(() => {
         async function run() {
             try {
+                router.dismissAll();
                 router.replace({
                     pathname: "/preview",
                     // params: { data: JSON.stringify(recipe), photoUri }
@@ -49,7 +50,7 @@ export default function Processing() {
             {processing === 2 && (
                 <>
                     <Text>There was an error processing the recipe.</Text>
-                    <AppButton title="Go Back" variant="light" onPress={() => router.back()} style={styles.backButton} />
+                    <AppButton title="Go Back" variant="light" onPress={() => { router.dismissAll(); router.replace("/capture") }} style={styles.backButton} />
                 </>
             )}
         </View>

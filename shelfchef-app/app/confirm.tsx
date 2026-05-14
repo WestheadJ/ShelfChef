@@ -17,7 +17,7 @@ export default function Confirm() {
                 <View style={styles.missingPhotoActions}>
                     <AppButton
                         title="Back To Camera"
-                        onPress={() => router.replace("/capture")}
+                        onPress={() => { router.dismissAll(); router.replace("/capture"); }}
                     />
                 </View>
             </View>
@@ -37,19 +37,19 @@ export default function Confirm() {
             <View style={styles.actionRow}><AppButton
                 title="Go Back"
                 variant="light"
-                onPress={() => router.push({
-                    pathname: "/capture",
-
-                })}
+                onPress={() => { router.dismissAll(); router.replace("/capture") }}
                 style={styles.backButton}
             />
                 <AppButton
                     title="Confirm"
                     variant="accent"
-                    onPress={() => router.push({
-                        pathname: "/processing",
-                        params: { photoUri: resolvedPhotoUri }
-                    })}
+                    onPress={() => {
+                        router.dismissAll();
+                        router.push({
+                            pathname: "/processing",
+                            params: { photoUri: resolvedPhotoUri }
+                        })
+                    }}
                     style={styles.confirmButton}
                 />
             </View>
